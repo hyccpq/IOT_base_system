@@ -1,0 +1,15 @@
+{
+  "name": "iot_project",
+  "version": "1.0.0",
+  "description": "This is my graduation project",
+  "main": "start.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://git.coding.net/Kalecgos/IoT_project.git"
+  },
+  "author": "hyccpq",
+  "license": "Apache-2.0"
+}
