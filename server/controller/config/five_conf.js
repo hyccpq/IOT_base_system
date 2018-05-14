@@ -1,12 +1,12 @@
-import Five from 'johnny-five'
+const Five = require('johnny-five')
 
-const board = new Five.Board({port: "/dev/cu.usbmodem1411"}))
+const board = new Five.Board({port: "/dev/cu.usbmodem1421"})
 
 const ready = new Promise((resolve, reject) => {
 	board.on('ready', function () {
-		console.log('Arduino连接成功！'.bgYellow)
+		console.log('Arduino连接成功！'.bgBlue)
 		resolve(this)
 	})
 })
 
-export default ready
+module.exports = ready

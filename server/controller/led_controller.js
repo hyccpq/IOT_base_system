@@ -1,13 +1,39 @@
-import Five from 'johnny-five'
-import pwm from '/'
+const Five = require('johnny-five')
+const socketServer = require('../lib/socket')
+require('colors')
 
-import ready from './config/five_conf'
+const ready = require('./config/five_conf')
 
 ;(async () => {
-	let self = await ready
-	let led = new Five.Led('11')
-	
-	led.brightness(pwm)
+	try {
+		const self = await ready
+		const conn = await socketServer(2333)
+		let pwm
+		let led = new Five.Led('11')
+
+		self.repl.inject({
+        on(){
+            led.on()
+        },
+        off(){
+            led.off()
+        },
+			  pwm(val){
+        	  led.brightness(val)
+			  }
+    })
+		
+		conn.on('text', function (strPWM) {
+			console.log(strPWM);
+			pwm = parseInt(strPWM)
+			led.brightness(pwm)
+
+			conn.sendText(pwm + "")
+		})
+		
+	} catch (e) {
+		throw new Error(e)
+	}
 	
 })()
 
