@@ -18,10 +18,10 @@ const ready = require('./config/five_conf')
         off(){
             led.off()
         },
-			  pwm(val){
-        	  led.brightness(val)
-			  }
-    })
+			pwm(val){
+				led.brightness(val)
+			}
+		})
 		
 		conn.on('text', function (strPWM) {
 			console.log(strPWM);

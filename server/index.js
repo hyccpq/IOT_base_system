@@ -7,7 +7,7 @@ const MIDDLEWARE = ['bodyparser', 'prod', 'logs']
 
 const app = new Koa()
 
-;(() => {
+;(async () => {
 	
 	const useMiddleware = app => {
 		R.map(
@@ -23,7 +23,7 @@ const app = new Koa()
 
 	useMiddleware(app)
 	
-	require('./tasks/led_process')
+	await require('./tasks/controller_process')
 	
 	app.listen(55555, () => {
 		console.log('服务运行在:'.bgGreen, 'http://localhost:55555')
