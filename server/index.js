@@ -1,6 +1,7 @@
 import Koa from 'koa'
 import { resolve } from 'path'
 import R from 'ramda'
+import { initSchemas, connect } from './database/init'
 import 'colors'
 
 const MIDDLEWARE = ['bodyparser', 'prod', 'logs']
@@ -8,6 +9,9 @@ const MIDDLEWARE = ['bodyparser', 'prod', 'logs']
 const app = new Koa()
 
 ;(async () => {
+	initSchemas()
+	
+	connect()
 	
 	const useMiddleware = app => {
 		R.map(

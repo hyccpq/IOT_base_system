@@ -1,22 +1,35 @@
 const Five = require('johnny-five')
+const socketServer = require('../lib/socket')
 require('colors')
 
 const ready = require('./config/five_conf')
 
 ;(async () => {
 	try {
+		let T ,conn
 		await ready
-		// const conn = await socketServer(2333)
+		
 		let temp = new Five.Thermometer({
 			controller: "DS18B20",
 			pin: 2
 		})
 		
 		temp.on('change', function () {
-			console.log('温度为 %d C', this.celsius)
+			T = this.celsius
+			
+			console.log('温度为 %d 度', this.celsius)
+			if(conn){
+				conn.sendText(T + '')
+			}
 		})
+		
+		setInterval(function () {
+			process.send(T)
 
-
+		}, 1000 * 3)
+		
+		conn = await socketServer(2333)
+		
 	} catch (e) {
 		throw new Error(e)
 	}

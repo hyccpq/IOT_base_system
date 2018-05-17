@@ -6,7 +6,7 @@ export default class Child_process {
 	
 	constructor (url){
 		this.script = resolve(__dirname, url)
-		this.child = cp.fork(this.script, [])
+		this.child = cp.fork(this.script)
 		
 		let invoked = false
 		
@@ -25,12 +25,7 @@ export default class Child_process {
 		
 	}
 	
-	receive(){
-		return new Promise((resolve, reject) => {
-			this.child.on('message', data => {
-				resolve(data)
-			})
-		})
-		
+	receive(callback){
+		this.child.on('message', callback)
 	}
 }

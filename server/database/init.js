@@ -7,7 +7,10 @@ const db = 'mongodb://localhost/my_ioT'
 mongoose.Promise = global.Promise
 
 export const initSchemas = () => {
-	glob.sync(resolve(__dirname, './schema', '**/*.js')).forEach(require)
+	glob.sync(resolve(__dirname, './schema', '**/*.js')).forEach(item => {
+		console.log(item);
+		require(item)
+	})
 }
 
 // export const initAdmin = async () => {
