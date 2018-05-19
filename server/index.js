@@ -4,7 +4,7 @@ import R from 'ramda'
 import { initSchemas, connect } from './database/init'
 import 'colors'
 
-const MIDDLEWARE = ['bodyparser', 'prod', 'logs']
+const MIDDLEWARE = ['bodyparser', 'logs', 'router', 'session']
 
 const app = new Koa()
 
@@ -27,7 +27,7 @@ const app = new Koa()
 
 	useMiddleware(app)
 	
-	await require('./tasks/controller_process')
+	await require('./service/controller_process')
 	
 	app.listen(55555, () => {
 		console.log('服务运行在:'.bgGreen, 'http://localhost:55555')

@@ -9,19 +9,19 @@ let servos = {}
 const servosTurn = dir => {
 	switch (dir) {
 		case 'left':
-			servos.x.step(3);
+			servos.x.step(2);
 			break
 		
 		case 'right':
-			servos.x.step(-3);
+			servos.x.step(-2);
 			break
 		
 		case 'top':
-			servos.y.step(3);
+			servos.y.step(2);
 			break
 		
 		case 'down':
-			servos.y.step(-3);
+			servos.y.step(-2);
 			break
 	}
 }

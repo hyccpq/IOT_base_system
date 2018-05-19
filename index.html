@@ -11,30 +11,30 @@
 var ws = new WebSocket('ws://localhost:2333')
 
 ws.onopen = function () {
-	// $('#uuu').bind('keyup', function (event) {
-	// 	if(event.keyCode == '13') {
-	// 		let item = $('#uuu').val()
-	// 		ws.send(item)
-	// 	}
-    //
-	// })
+	$('#uuu').bind('keyup', function (event) {
+		if(event.keyCode == '13') {
+			let item = $('#uuu').val()
+			ws.send(item)
+		}
 
-    $(document).keydown(function (e) {
-        switch (e.keyCode) {
-            case 37:
-            	ws.send('left')
-                break
-            case 39:
-            	ws.send('right')
-                break
-            case 38:
-            	ws.send('top')
-                break
-            case 40:
-            	ws.send('down')
-                break
-        }
-    })
+	})
+
+    // $(document).keydown(function (e) {
+    //     switch (e.keyCode) {
+    //         case 37:
+    //         	ws.send('left')
+    //             break
+    //         case 39:
+    //         	ws.send('right')
+    //             break
+    //         case 38:
+    //         	ws.send('top')
+    //             break
+    //         case 40:
+    //         	ws.send('down')
+    //             break
+    //     }
+    // })
 }
 
 ws.onmessage = function (ev) {

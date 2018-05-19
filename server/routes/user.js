@@ -1,0 +1,48 @@
+import {controller, get, post, auth, admin, required} from '../lib/decorator'
+
+import { checkPassword } from '../service/admin'
+import { getAllMovies } from "../service/getMovieDatabase";
+
+@controller('/api/v0/user')
+export class User {
+	
+	@get('/movie/list')
+	@auth
+	@admin('admin')
+	async getMovieList (ctx, next) {
+		const movies = await getAllMovies()
+		ctx.body = {
+			success: true,
+			movies
+		}
+	}
+	
+	@post('/')
+	@required({
+		body: ['username', 'password']
+	})
+	async loadControl (ctx, next) {
+		
+		const { username, password } = ctx.request.body
+		console.log(username, password);
+		const matchData = await checkPassword(username, password)
+		
+		if(matchData.match) {
+			ctx.session.user = {
+				_id: matchData.user._id,
+				email: matchData.user.email,
+				role: matchData.user.role,
+				username: matchData.user.username
+			}
+			
+			return (ctx.body = {
+				succsee: true
+			})
+		} else {
+			ctx.body = {
+				success: false,
+				errcode: '用户名或者密码不正确'
+			}
+		}
+	}
+}
