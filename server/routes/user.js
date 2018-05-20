@@ -1,23 +1,12 @@
-import {controller, get, post, auth, admin, required} from '../lib/decorator'
+import { controller, get, post, auth, admin, required } from '../lib/decorator'
 
 import { checkPassword } from '../service/admin'
-import { getAllMovies } from "../service/getMovieDatabase";
 
 @controller('/api/v0/user')
 export class User {
 	
-	@get('/movie/list')
-	@auth
-	@admin('admin')
-	async getMovieList (ctx, next) {
-		const movies = await getAllMovies()
-		ctx.body = {
-			success: true,
-			movies
-		}
-	}
 	
-	@post('/')
+	@post('')
 	@required({
 		body: ['username', 'password']
 	})

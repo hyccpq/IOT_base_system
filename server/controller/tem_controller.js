@@ -11,7 +11,8 @@ const ready = require('./config/five_conf')
 		
 		let temp = new Five.Thermometer({
 			controller: "DS18B20",
-			pin: 2
+			pin: 2,
+			freq: 10 * 1000
 		})
 		
 		temp.on('change', function () {
@@ -26,7 +27,7 @@ const ready = require('./config/five_conf')
 		setInterval(function () {
 			process.send(T)
 
-		}, 1000 * 3)
+		}, 1000 * 20)
 		
 		conn = await socketServer(2333)
 		

@@ -7,7 +7,7 @@ const ready = require('./config/five_conf')
 ;(async () => {
 	try {
 		const self = await ready
-		const conn = await socketServer(2333)
+		const conn = await socketServer(2334)
 		let pwm
 		let led = new Five.Led('11')
 
@@ -17,10 +17,7 @@ const ready = require('./config/five_conf')
         },
         off(){
             led.off()
-        },
-			pwm(val){
-				led.brightness(val)
-			}
+        }
 		})
 		
 		conn.on('text', function (strPWM) {

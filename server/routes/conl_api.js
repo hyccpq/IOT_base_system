@@ -2,16 +2,18 @@ import { controller, get, post, auth, admin, required } from '../lib/decorator'
 import { getAllTem } from "../service/getTemDatabase";
 import { createLedProcess, createServosProcess } from "../service/controller_process"
 
-@controller('/api/v0/')
-export class User {
-	_ledProcess = true
-	_servosProcess = true
+@controller('/api/v0')
+export class Controllers {
+	static _ledProcess = true
+	static _servosProcess = true
+	
 	
 	@get('/led')
 	async getLedCon (ctx, next) {
-		if(this._ledProcess) {
+		if(Controllers._ledProcess) {
 			createLedProcess()
-			this._ledProcess = false
+				// console.log("led语言");
+			Controllers._ledProcess = false
 		}
 		
 		ctx.body = {
@@ -30,9 +32,9 @@ export class User {
 	
 	@get('/servo')
 	async getServoCon (ctx, next) {
-		if(this._servosProcess) {
+		if(Controllers._servosProcess) {
 			createServosProcess()
-			this._servosProcess = false
+			Controllers._servosProcess = false
 		}
 		
 	}

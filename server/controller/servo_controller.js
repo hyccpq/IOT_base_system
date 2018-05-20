@@ -40,7 +40,7 @@ const servosTurn = dir => {
 		})
 	}
 	
-	let conn =  await socketServer(2333)
+	let conn =  await socketServer(2335)
 	
 	conn.on('text', function (dir) {
 		console.log(dir);

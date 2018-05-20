@@ -13,9 +13,23 @@ export const initSchemas = () => {
 	})
 }
 
-// export const initAdmin = async () => {
-// 	const User = mongoose.model('User')
-// }
+export const initAdmin = async () => {
+	const User = mongoose.model('User')
+	let user = await User.findOne({
+		username: 'hyccpq'
+	})
+	
+	if(!user) {
+		const user = new User({
+			username: 'hyccpq',
+			email: 'hyccpq@hotmail.com',
+			password: 'yyyyyy',
+			role: 'admin'
+		})
+		
+		await user.save()
+	}
+}
 
 export const connect = () => {
 	let maxConnect = 0

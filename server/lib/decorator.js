@@ -24,9 +24,10 @@ export class Route {
 			let prefixPath = conf.target[symbolPrefix]
 			if(prefixPath) prefixPath = normalizePath(prefixPath)
 			const routerPath = prefixPath + conf.path
+				console.log(conf.method, routerPath, ...controllers);
 			this.router[conf.method](routerPath, ...controllers)
 		}
-		
+
 		this.app.use(this.router.routes())
 			.use(this.router.allowedMethods())
 	}
