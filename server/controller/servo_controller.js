@@ -1,8 +1,4 @@
-const Five = require('johnny-five')
 const socketServer = require('../lib/socket')
-require('colors')
-
-const ready = require('./config/five_conf')
 
 let servos = {}
 
@@ -26,8 +22,7 @@ const servosTurn = dir => {
 	}
 }
 
-;(async () => {
-	await ready
+module.exports = async (self, Five) => {
 	servos = {
 		x: new Five.Servo({
 			pin: 4,
@@ -40,6 +35,17 @@ const servosTurn = dir => {
 		})
 	}
 	
+	self.repl.inject({
+		serOff(){
+			servos.x.stop()
+			servos.y.stop()
+		},
+		serOn(){
+			servos.x.on()
+			servos.y.on()
+		}
+	})
+	
 	let conn =  await socketServer(2335)
 	
 	conn.on('text', function (dir) {
@@ -47,4 +53,4 @@ const servosTurn = dir => {
 		servosTurn(dir)
 		conn.sendText(dir)
 	})
-})()
+}

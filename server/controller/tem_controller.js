@@ -1,13 +1,8 @@
-const Five = require('johnny-five')
 const socketServer = require('../lib/socket')
-require('colors')
 
-const ready = require('./config/five_conf')
-
-;(async () => {
+module.exports = async (self, Five) => {
 	try {
 		let T ,conn
-		await ready
 		
 		let temp = new Five.Thermometer({
 			controller: "DS18B20",
@@ -25,8 +20,9 @@ const ready = require('./config/five_conf')
 		})
 		
 		setInterval(function () {
-			process.send(T)
-
+			if(T < 50 && T > -20) {
+				process.send(T)
+			}
 		}, 1000 * 20)
 		
 		conn = await socketServer(2333)
@@ -35,4 +31,4 @@ const ready = require('./config/five_conf')
 		throw new Error(e)
 	}
 	
-})()
+}

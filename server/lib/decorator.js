@@ -24,7 +24,6 @@ export class Route {
 			let prefixPath = conf.target[symbolPrefix]
 			if(prefixPath) prefixPath = normalizePath(prefixPath)
 			const routerPath = prefixPath + conf.path
-				console.log(conf.method, routerPath, ...controllers);
 			this.router[conf.method](routerPath, ...controllers)
 		}
 
@@ -37,7 +36,6 @@ const normalizePath = path => path.startsWith('/') ? path : `/${path}`
 
 const router = conf => (target, key, descriptor) => {
 	conf.path = normalizePath(conf.path)
-	console.log(...conf)
 	routerMap.set({
 		target: target,
 		...conf
@@ -89,7 +87,7 @@ const decorate = (args, middleware) => {
 const convert = middleware => (...args) => decorate(args, middleware)
 
 export const auth = convert(async (ctx, next) => {
-	if(!ctx.session.uesr) {
+	if(!ctx.session.views) {
 		return (ctx.body = {
 			success: false,
 			code: 401,
@@ -102,7 +100,7 @@ export const auth = convert(async (ctx, next) => {
 
 
 export const admin = roleExpected => convert(async (ctx, next) => {
-	const { role } = ctx.session.user
+	const { role } = ctx.session.views
 	
 	if(!role || role !== roleExpected) {
 		return (ctx.body = {

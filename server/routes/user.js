@@ -17,21 +17,27 @@ export class User {
 		const matchData = await checkPassword(username, password)
 		
 		if(matchData.match) {
-			ctx.session.user = {
+			ctx.session.views = {
 				_id: matchData.user._id,
 				email: matchData.user.email,
 				role: matchData.user.role,
 				username: matchData.user.username
 			}
 			
-			return (ctx.body = {
-				succsee: true
-			})
+			ctx.body = {
+				success: true
+			}
 		} else {
 			ctx.body = {
 				success: false,
 				errcode: '用户名或者密码不正确'
 			}
 		}
+	}
+	
+	@post('/check')
+	@auth
+	async check (ctx, next) {
+	
 	}
 }

@@ -1,7 +1,7 @@
 import session from 'koa-session'
 
 export const addSession = app => {
-	app.keys = ['movie-trailer']
+	app.keys = ['ioT']
 	
 	const CONFIG = {
 		key:'koa:sess',
@@ -9,8 +9,9 @@ export const addSession = app => {
 		overwrite: true,
 		httpOnly: false,
 		signed: true,
-		rolling:false
+		rolling:false,
+		renew: false
 	}
-	
+	// console.log(session(CONFIG, app));
 	app.use(session(CONFIG, app))
 }
