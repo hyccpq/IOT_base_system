@@ -1,12 +1,12 @@
-import { controller, get, post, auth, admin, required } from '../lib/decorator'
-
+import { controller, get, post, auth, required } from '../lib/decorator'
+import { getToken } from '../service/auth'
 import { checkPassword } from '../service/admin'
 
 @controller('/api/v0/user')
 export class User {
 	
 	
-	@post('')
+	@post('/login')
 	@required({
 		body: ['username', 'password']
 	})
@@ -17,14 +17,16 @@ export class User {
 		const matchData = await checkPassword(username, password)
 		
 		if(matchData.match) {
-			ctx.session.views = {
-				_id: matchData.user._id,
-				email: matchData.user.email,
-				role: matchData.user.role,
-				username: matchData.user.username
-			}
+			// ctx.session.views = {
+			// 	_id: matchData.user._id,
+			// 	email: matchData.user.email,
+			// 	role: matchData.user.role,
+			// 	username: matchData.user.username
+			// }
 			
 			ctx.body = {
+				username,
+				token: getToken(username),
 				success: true
 			}
 		} else {
@@ -34,10 +36,12 @@ export class User {
 			}
 		}
 	}
-	
+
 	@post('/check')
 	@auth
 	async check (ctx, next) {
-	
+		ctx.body = {
+			success: true
+		}
 	}
 }

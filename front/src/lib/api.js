@@ -21,7 +21,7 @@ export const login = async (username, password) => {
 	try {
 		let res = await $http({
 			method: 'post',
-			url: 'user/',
+			url: 'user/login',
 			data: {
 				username,
 				password

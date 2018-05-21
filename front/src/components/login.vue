@@ -55,7 +55,7 @@
 		},
 		methods: {
 			async submitForm(formName) {
-				this.$refs[formName].validate((valid) => {
+				this.$refs[formName].validate(valid => {
 					if (valid) {
 						alert('submit!');
 					} else {
@@ -65,7 +65,11 @@
 				})
 
 				let info = await login(this.ruleForm.name, this.ruleForm.pass)
-				console.log(info);
+                if (info.data.success) {
+	                localStorage.setItem('token', info.data.token)
+	                this.$router.push('/')
+                }
+
 			},
 			resetForm(formName) {
 				this.$refs[formName].resetFields();

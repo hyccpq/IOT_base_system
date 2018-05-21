@@ -7,7 +7,7 @@ import { initSchemas, connect, initAdmin } from './database/init'
 import { createProcess } from './service/controller_process'
 import 'colors'
 
-const MIDDLEWARE = ['bodyparser', 'logs', 'router', 'session']
+const MIDDLEWARE = ['bodyparser', 'logs', 'router']
 
 const prod = process.env.NODE_ENV === 'production'
 
@@ -26,7 +26,7 @@ const app = new Koa()
 	
 	await initAdmin()
 	
-	// createProcess()
+	createProcess()
 	
 })()
 

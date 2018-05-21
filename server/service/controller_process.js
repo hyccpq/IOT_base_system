@@ -8,9 +8,9 @@ import mongoose from 'mongoose'
 
 export const createProcess = () => {
 	const Temp = mongoose.model('Temperature')
-	let temProcess = new Child_process('../controller/initControllers.js')
+	let process = new Child_process('../controller/initControllers.js')
 	
-	temProcess.receive(async data => {
+	process.receive(async data => {
 		let temp = new Temp({ temperature:data })
 		console.log(data)
 		await temp.save()

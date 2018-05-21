@@ -1,8 +1,9 @@
-const Router = require('koa-router')
-const { resolve } = require('path')
-const glob = require('glob')
-const _ = require('lodash')
-const R = require('ramda')
+import Router from 'koa-router'
+import { resolve } from 'path'
+import glob from 'glob'
+import _ from 'lodash'
+import R from 'ramda'
+import { verify } from '../service/auth'
 
 const symbolPrefix = Symbol('prefix')
 const routerMap = new Map()
@@ -87,31 +88,23 @@ const decorate = (args, middleware) => {
 const convert = middleware => (...args) => decorate(args, middleware)
 
 export const auth = convert(async (ctx, next) => {
-	if(!ctx.session.views) {
-		return (ctx.body = {
-			success: false,
-			code: 401,
-			err: '登录信息失效，重新登录'
-		})
-	}
-	
-	await next()
+	await verify(ctx, next)
 })
 
 
-export const admin = roleExpected => convert(async (ctx, next) => {
-	const { role } = ctx.session.views
-	
-	if(!role || role !== roleExpected) {
-		return (ctx.body = {
-			success: false,
-			code: 403,
-			err: 'sorry，您没权限'
-		})
-	}
-	
-	await next()
-})
+// export const admin = roleExpected => convert(async (ctx, next) => {
+// 	const { role } = ctx.session.views
+//
+// 	if(!role || role !== roleExpected) {
+// 		return (ctx.body = {
+// 			success: false,
+// 			code: 403,
+// 			err: 'sorry，您没权限'
+// 		})
+// 	}
+//
+// 	await next()
+// })
 
 export const required = rules => convert(async (ctx, next) => {
 	let errors = []
