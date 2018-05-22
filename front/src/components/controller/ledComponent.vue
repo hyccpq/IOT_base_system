@@ -55,7 +55,6 @@
                 let ledConf = JSON.parse(ev.data)
                 this.ledState = ledConf.ledState
                 this.value = ledConf.pwm
-                    console.log(ledConf);
             }
         },
         beforeDestroy(){

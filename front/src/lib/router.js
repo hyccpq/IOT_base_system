@@ -7,6 +7,7 @@ const login = () => import('../components/login')
 const welcome = () => import('../components/welcome')
 const index = () => import('../components/index')
 const ledComponent = () => import('../components/controller/ledComponent')
+const temComponent = () => import('../components/controller/temComp')
 
 export default new Router({
 	mode: 'history',
@@ -33,6 +34,12 @@ export default new Router({
 					meta: { auth: true },
 					name: 'ledController',
 					component: ledComponent
+				},
+				{
+					path: '/temController',
+					meta: { auth: true },
+					name: 'temController',
+					component: temComponent
 				}
 			]
 		}

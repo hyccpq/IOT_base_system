@@ -4,7 +4,7 @@ export const getAllTem = async (time, page = 0, limit = 10) => {
 	try {
 		let res = await $http({
 			method : 'get',
-			url:'',
+			url:'/tem',
 			params: {
 				time,
 				page,

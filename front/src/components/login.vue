@@ -15,7 +15,7 @@
 </template>
 
 <script>
-	import { login } from '../lib/api'
+	import { login } from '../lib/all_api'
 	import { Form, FormItem, Input, Button } from 'element-ui'
 	export default {
 		name: "myform",

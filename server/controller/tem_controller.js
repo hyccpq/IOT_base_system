@@ -1,34 +1,36 @@
-const socketServer = require('../lib/socket')
+const SocketServer = require('../lib/socket')
 
 module.exports = async (self, Five) => {
 	try {
-		let T ,conn
+		let T = {
+			T : 'null'
+		}
 		
 		let temp = new Five.Thermometer({
 			controller: "DS18B20",
 			pin: 2,
-			freq: 10 * 1000
+			freq: 2 * 100
 		})
+		let socket = new SocketServer(2333, T)
 		
 		temp.on('change', function () {
-			T = this.celsius
-			
-			console.log('温度为 %d 度', this.celsius)
-			if(conn){
-				conn.sendText(T + '')
+			T = {
+				T: this.celsius
 			}
+			console.log('温度为', JSON.stringify(T))
+			socket.boardcast(JSON.stringify(T))
 		})
 		
 		setInterval(function () {
-			if(T < 50 && T > -20) {
-				process.send(T)
+			if(T.T < 50 && T.T > -20) {
+				process.send(T.T)
 			}
-		}, 1000 * 20)
+		}, 1000 * 30)
 		
-		conn = await socketServer(2333)
+		
 		
 	} catch (e) {
-		throw new Error(e)
+		console.log(e);
 	}
 	
 }

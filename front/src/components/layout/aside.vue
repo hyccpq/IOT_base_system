@@ -50,7 +50,7 @@
                         break
 
                     case '3':
-                    	this.$router.push('/ledController')
+                    	this.$router.push('/temController')
                         break
 
                     case '4':

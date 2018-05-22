@@ -19,6 +19,7 @@ export class Controllers {
 	// }
 	
 	@get('/tem')
+	@auth
 	async getTem (ctx, next) {
 		const tem = await getAllTem()
 		ctx.body = {

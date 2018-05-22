@@ -1,8 +1,8 @@
-const socketServer = require('../lib/socket')
+const SocketServer = require('../lib/socket')
 
-module.exports = async (self, Five) => {
+module.exports = (self, Five) => {
 	try {
-		const conn = await socketServer(2334)
+		
 		let pwm = 0,
 			ledState = false
 		let led = new Five.Led('11')
@@ -21,23 +21,12 @@ module.exports = async (self, Five) => {
 			ledState
 		}
 		
-		conn.sendText(JSON.stringify({
-			pwm,ledState
-		}))
+		let socket = new SocketServer(2334, ledConf, receive)
 		
-		let clientLedConf = {}
+		// let clientLedConf = {}
 		
-		conn.on('error',function (err) {
-			console.log(err)
-		})
-		
-		conn.on('close', function () {
-			console.log('连接已经断开')
-		})
-		
-		conn.on('text', function (clientStrLedConf) {
-			console.log(clientStrLedConf);
-			clientLedConf = JSON.parse(clientStrLedConf)
+		function receive(clientLedConf) {
+			console.log(clientLedConf);
 			if(clientLedConf.ledState) {
 				if(!ledState) {
 					led.on()
@@ -54,10 +43,11 @@ module.exports = async (self, Five) => {
 				pwm,
 				ledState
 			}
-			conn.sendText(JSON.stringify(ledConf))
-		})
+			
+			socket.boardcast(JSON.stringify(ledConf))
+		}
 		
-		
+		// socket.receiveMsg(receive)
 		
 	} catch (e) {
 		console.log(e)

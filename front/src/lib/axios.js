@@ -1,5 +1,4 @@
 import axios from 'axios'
-import app from '../main'
 
 let instance = axios.create({
 	baseURL: `${location.protocol}/api/v0/`,
@@ -25,8 +24,8 @@ instance.interceptors.response.use(
     if(error.response){
       switch (error.response.status){
 	      case 401:
-          console.log('登陆超时')
-          app.$router.replace('/login')
+          alert('登陆超时')
+          // app.$router.replace('/login')
       }
     }
     return Promise.reject(error);
