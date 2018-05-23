@@ -9,7 +9,9 @@ export const getAllTem = async (time, limit = 10, skip = 0) => {
 	}
 	
 	try {
-		const tem = await getTemDatabase.find(query).limit(limit).skip(skip)
+		const tem = await getTemDatabase.find(query).limit(limit).skip(skip).sort({
+			'meta.createdAt': -1
+		})
 		
 		return tem
 	} catch (e) {

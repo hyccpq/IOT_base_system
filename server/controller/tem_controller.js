@@ -1,17 +1,17 @@
 const SocketServer = require('../lib/socket')
+let T = {
+			T : 'null'
+		}
 
 module.exports = async (self, Five) => {
 	try {
-		let T = {
-			T : 'null'
-		}
 		
 		let temp = new Five.Thermometer({
 			controller: "DS18B20",
 			pin: 2,
 			freq: 2 * 100
 		})
-		let socket = new SocketServer(2333, T)
+		let socket = new SocketServer(2333, T, false, false)
 		
 		temp.on('change', function () {
 			T = {

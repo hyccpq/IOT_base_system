@@ -8,6 +8,7 @@ const welcome = () => import('../components/welcome')
 const index = () => import('../components/index')
 const ledComponent = () => import('../components/controller/ledComponent')
 const temComponent = () => import('../components/controller/temComp')
+const cloudTerrace = () => import('../components/controller/CloudTerraceComp')
 
 export default new Router({
 	mode: 'history',
@@ -40,6 +41,12 @@ export default new Router({
 					meta: { auth: true },
 					name: 'temController',
 					component: temComponent
+				},
+				{
+					path: '/cloudTerraceController',
+					meta: { auth: true },
+					name: 'cloudTerraceController',
+					component: cloudTerrace
 				}
 			]
 		}

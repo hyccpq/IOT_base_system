@@ -11,7 +11,7 @@ const ready = require('./config/five_conf')
 		const self = await ready
 		createLedCon(self, Five)
 		createTemCon(self, Five)
-		// createServoCon(self, Five)
+		createServoCon(self, Five)
 		
 		
 	} catch (e) {

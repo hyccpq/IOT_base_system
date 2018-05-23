@@ -54,7 +54,7 @@
                         break
 
                     case '4':
-                    	this.$router.push('/ledController')
+                    	this.$router.push('/cloudTerraceController')
                         break
                 }
 
