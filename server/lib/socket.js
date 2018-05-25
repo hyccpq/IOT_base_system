@@ -1,6 +1,8 @@
 const ws = require('nodejs-websocket')
 
-
+/**
+ * websocket封装
+ */
 class SocketServer {
 	/**
      * 创建socket的构造函数

@@ -26,7 +26,7 @@ const app = new Koa()
 	
 	await initAdmin()
 	
-	createProcess()
+	// createProcess()
 	
 })()
 

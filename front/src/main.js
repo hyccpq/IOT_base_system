@@ -3,6 +3,7 @@ import App from './App'
 import router from './lib/router'
 import $http from './lib/axios'
 import 'element-ui/lib/theme-chalk/index.css'
+import 'v-charts/lib/style.min.css'
 
 router.beforeEach(async (to, from, next) => {
 	if(to.matched.some(({meta}) => meta.auth)) {

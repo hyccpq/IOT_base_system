@@ -41,7 +41,7 @@
         border-top: #e9e9e9 solid 1px;
     }
     .my-main {
-        height: 100%;
+        height: inherit;
     }
     .center {
         height: 100%;

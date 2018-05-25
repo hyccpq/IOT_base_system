@@ -25,6 +25,7 @@ instance.interceptors.response.use(
       switch (error.response.status){
 	      case 401:
           alert('登陆超时')
+		  window.location.replace('/login')
           // app.$router.replace('/login')
       }
     }
