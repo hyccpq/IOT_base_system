@@ -94,12 +94,112 @@ export const createProcess = () => {
 调用侦听消息'message'事件的方法，传入回调函数，在每一次收到子进程传递来的消息的时候，新建数据库文档，把其放入保存。
 
 
-### 路由
+### 装饰器模式设计路由
 平时设计一个NodeJs的路由步骤会比较繁琐，还好Koa框架给我们对路由进行了封装大部分的实现，并且async和await已经对异步回调进行的相关大的简化，给路由的书写带来了很大的方便。由于本次设计，我把其当成一个产品来设计，追求的是更低的耦合从而实现更加容易的可扩展性。
-这个时候，设计模式登场。由于JavaScript的装饰器是新的标准，并且大体上是和Python是类似的
+这个时候，设计模式登场。由于JavaScript的装饰器是新的标准，并且大体上是和Python是类似的，在Python做程序开发的时候经常用到装饰器来进行类或者方法的修饰，用来满足一些特定的功能，而并非继承重载，极大的降低耦合以及代码量的同时也能满足开放封闭原则，那这次的路由就用装饰器模式来完成它吧。
+首先，先来分析一下需求，一般在设计这个路由的时候，我们会考虑到后台需要的api，然后是需要怎样的路由，这个路由下面需要哪些子路由，当中还有一些权限验证，登录密码比对等功能。
+这次设计中路由较为容易，主要实现系统登录，登录后页面权限的验证，以及温度历史数据api等。为了方便今后扩展将功能进行拆分，每一步每一个功能设计成一个装饰器。
+可以设计成一个主路由控制器就对应一个类，用来对这个类进行修饰，子路由就用相应的修饰器来修饰方法，需要进行权限验证等同样也用相应的修饰器对此方法进行修饰，这样一做层次结构就足够鲜明明了了。
+```JavaScript
+import { controller, get, post, auth, required } from '../lib/decorator'
+import { getToken } from '../service/auth'
+import { checkPassword } from '../service/admin'
+
+@controller('/api/v0/user')
+export class User {
+	@post('/login')
+	@required({
+		body: ['username', 'password']
+	})
+	async loadControl (ctx, next) {
+		
+		const { username, password } = ctx.request.body
+		console.log(username, password);
+		const matchData = await checkPassword(username, password)
+		
+		if(matchData.match) {	
+			ctx.body = {
+				username,
+				token: getToken(username),
+				success: true
+			}
+		} else {
+			ctx.body = {
+				success: false,
+				errcode: '用户名或者密码不正确'
+			}
+		}
+	}
+	@post('/check')
+	@auth
+	async check (ctx, next) {
+		ctx.body = {
+			success: true
+		}
+	}
+}
+```
+这里用到了@controller(), @post(), @auth, @required()等多个修饰器，对应要实现，主路由控制，子路由方式，权限，那些字段是必要的等。
+主控制器主要目的就是匹配主路由进入到相应的类中，然后根据相应的请求方法修饰穿透到子路由，比如@get修饰则就是以get方式获得，@post修饰则说明以post方式提交。
+接着就是对应装饰器的实现过程。类的装饰器会传入一个target，这个target对应修饰的这个类本身，在接受到相应的路由匹配后，主控制器取得主路由，并且在这个时候把它放到原型上作为一个静态属性以提供访问。
+```JavaScript
+export const controller = path => target => (target.prototype[symbolPrefix] = path)
+```
+对方法的装饰器实现起来就稍微复杂一点，对方法修饰的装饰器会传入，需要区分网络请求，对不同的方式进行匹配存储，存储这里就用到ES6的map数据结构。
+```JavaScript
+const symbolPrefix = Symbol('prefix')
+const routerMap = new Map()
+const normalizePath = path => path.startsWith('/') ? path : `/${path}`
+const router = conf => (target, key, descriptor) => {
+	conf.path = normalizePath(conf.path)
+	console.log(...conf)
+	routerMap.set({
+		target: target,
+		...conf
+	}, target[key])
+}
+
+export const get = path => router({
+	method: 'get',
+	path
+})
+
+export const post  = path => router({
+	method: 'post',
+	path
+})
+```
+然后把路由匹配项都存入map数据结构中，里面用请求方法和路由拼接内容作为建，类里面提取出来的方法为值。往后要做的就是初始化整个路由，在初始化的时候我们需要在构造函数中拿到Koa实例对象app，路径，实例化Koa路由；另外添加个初始化方法，因为装饰器在编译的时候就已经发生，而不在运行的时候，所以在调用这个初始化方法的时候能够加载全部的路由类，拿到里面的各项路由配置。对其进行遍历，就能在这里轻松的进行路径拼接，加载，开始路由事件侦听。
+```JavaScript
+export class Route {
+	constructor(app, apiPath){
+		this.app = app
+		this.apiPath = apiPath
+		this.router = new Router()
+	}
+	
+	init(){
+		glob.sync(resolve(this.apiPath, './**/*.js')).forEach(require)
+		
+		for(let [conf, controller] of routerMap) {
+			const controllers = isArray(controller)
+			let prefixPath = conf.target[symbolPrefix]
+			if(prefixPath) prefixPath = normalizePath(prefixPath)
+			const routerPath = prefixPath + conf.path
+			this.router[conf.method](routerPath, ...controllers)
+		}
+		
+		this.app.use(this.router.routes())
+			.use(this.router.allowedMethods())
+	}
+}
+```
+这就完成了路由加载初始化模块的设计。为了安全性剩下的就是对权限的验证了，在路由请求的时候，要把未携带token或者不通过验证的token拦截，防止有人恶意对设备进行控制。这里对需要权限控制的子路由，也就是对应方法上面添加auth装饰器，把比对的中间方法放入到配置项的首项，当编译完成的时候，路由就会先针对这个比对的方法进行判断是否允许其穿透到下一层中去拿到需要的数据。
 
 
 ### webpack
+近年来对于网站网页开发离不开一个叫前端工程化，自动化的话题。现代浏览器的功能越来越强，解释器效率也越来越高，但不能保证所有人都用同样的浏览器，兼容性问题便为前台页面开发者一直都需考虑的首要问题；网页需要通过http请求完成，对代码的压缩也是不可忽略的问题；由于JavaScript是加载脚本执行，对用户可见，别人能轻易看到你的代码，给很多不怀好意的人带来了许多可乘之机，代码混淆在这个时候就显得有一定存在的意义。
+以上这些步骤在没有提出前端工程化和自动化之前，做起来蛮费事情的。随着近些年大前端时代的来临，
 
 ## 硬件控制部分
 ### LED亮度调节模块
