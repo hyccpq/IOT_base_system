@@ -199,9 +199,43 @@ export class Route {
 
 ### webpack
 近年来对于网站网页开发离不开一个叫前端工程化，自动化的话题。现代浏览器的功能越来越强，解释器效率也越来越高，但不能保证所有人都用同样的浏览器，兼容性问题便为前台页面开发者一直都需考虑的首要问题；网页需要通过http请求完成，对代码的压缩也是不可忽略的问题；由于JavaScript是加载脚本执行，对用户可见，别人能轻易看到你的代码，给很多不怀好意的人带来了许多可乘之机，代码混淆在这个时候就显得有一定存在的意义。
-以上这些步骤在没有提出前端工程化和自动化之前，做起来蛮费事情的。随着近些年大前端时代的来临，
+以上这些步骤在没有提出前端工程化和自动化之前，做起来蛮费事情的。随着近些年大前端时代的来临，再加上JavaScript的ES6，ES7的规范出现，这门语言也越来越完善，为了能够使用这些新规范，并且能够拥有很好的兼容性，打包环境就为此而生。例如Babel插件能够将ES6，ES7规范的代码编译为ES5的代码来对低版本进行兼容，当然CSS也有类似的插件，自动化完成这一套操作目前最受欢迎的就是webpack。
+它不仅仅能解决代码兼容性问题，还能方便开发者。配置好热更新插件后，不需要重新运行程序不需要刷新浏览器，修改任何代码内容，页面马上就会做出更新等特性，对开发者提供了极大的便利，提高了开发的效率。所以在后台上搭建前端开发环境同样必不可少。
+由于对前台开发时候，需要后台服务拿到相关数据，与后台建立相关通讯等，因此webpack需要和后端做个整合。npm分别安装webpack-dev-middleware以及webpack-hot-middleware。新建一个Koa中间件供由前面阐述的函数式加载中间件加载，在运行服务的时候，能够对网页进行编译打包，生成需要的静态页面。
+```JavaScript
+import dev from './dev/devMiddleware'
+import hot from './dev/hotMiddleware'
+import webpack from 'webpack'
+import serve from 'koa-static'
+import views from 'koa-views'
+import { resolve } from 'path'
+import webpackConfig from '../../front/build/webpack.dev.conf'
+
+const compiler = webpack(webpackConfig)
+const opt = {
+	writeToDisk:true,
+	logTime: true
+}
+export const webpackDev = app => {
+	app.use(dev(compiler, opt))
+	app.use(hot(compiler, opt))
+	
+	app.use(serve(resolve(__dirname, '../../front/dist')))
+	app.use(views(resolve(__dirname, '../../front/dist')), {
+		extensions: 'html'
+	})
+
+	app.use(async (ctx, next) => {
+		await ctx.render('index.html')
+	})
+}
+```
+这个中间件最重要的是导入前面自己写好的webpackConfig，进入到这个中间件的时候用webpack加载配置，把加载好的生成的webpack对象以及开发热更新配置项传入devMiddleware中生成静态文件，同样以相同的方式传入热更新hotMiddleware模块，以流的方式渲染，它一直保持在后台进行，也就是侦听到文件更改，从而对开发页面对应打包文件进行渲染更改，实现修改实时更新。接着调用Koa-static把生成的静态文件生成静态资源服务，每当路由请求到未匹配的路由时候就路由穿透到这里，得到页面的静态资源，并且渲染HTML骨架，从这里将路由的控制权交由前端，页面渲染交由前端。
 
 ## 硬件控制部分
+### 初始化johnny-Five
+由于johnny-Five的使用采用的异步侦听回调的形式，如果层层回调，陷入回调地狱，会使得代码极其难以理解，并且耦合程度极高不易于复用，首先就得解决初始化的时候回调问题。
+
 ### LED亮度调节模块
 
 
@@ -209,6 +243,7 @@ export class Route {
 
 
 ### 摄像头云台控制人脸跟踪模块
+
 
 ## 前台
 

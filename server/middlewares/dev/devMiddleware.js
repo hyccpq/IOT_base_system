@@ -2,7 +2,7 @@ import webpackDev from 'webpack-dev-middleware'
 
 export default (compiler, opts) => {
 	const middleware = webpackDev(compiler, opts)
-		// console.log(middleware.fileSystem);
+		// console.log(typeof compiler);
 	return async (ctx, next) => {
 		await middleware(ctx.req, {
 			end: content => {
