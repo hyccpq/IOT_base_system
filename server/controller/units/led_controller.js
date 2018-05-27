@@ -1,4 +1,4 @@
-const SocketServer = require('../lib/socket')
+const SocketServer = require('../../lib/socket')
 
 module.exports = (self, Five) => {
 	try {

@@ -1,8 +1,8 @@
-const SocketServer = require('../lib/socket')
+const SocketServer = require('../../lib/socket')
 let T = {
 			T : 'null'
 		}
-
+let timer
 module.exports = async (self, Five) => {
 	try {
 		
@@ -21,7 +21,7 @@ module.exports = async (self, Five) => {
 			socket.boardcast(JSON.stringify(T))
 		})
 		
-		setInterval(function () {
+		timer = setInterval(function () {
 			if(T.T < 50 && T.T > -20) {
 				process.send(T.T)
 			}
@@ -30,6 +30,7 @@ module.exports = async (self, Five) => {
 		
 		
 	} catch (e) {
+		clearInterval(timer)
 		console.log(e);
 	}
 	

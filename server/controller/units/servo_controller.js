@@ -1,5 +1,5 @@
-const SocketServer = require('../lib/socket')
-const facialRecognition = require('../lib/face')
+const SocketServer = require('../../lib/socket')
+const facialRecognition = require('../../lib/face')
 const { resolve } = require('path')
 const fs = require('fs-extra')
 
