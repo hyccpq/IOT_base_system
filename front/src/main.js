@@ -2,8 +2,11 @@ import Vue from 'vue'
 import App from './App'
 import router from './lib/router'
 import $http from './lib/axios'
+import { Notification } from 'element-ui'
 import 'element-ui/lib/theme-chalk/index.css'
 import 'v-charts/lib/style.min.css'
+
+Vue.prototype.$notify = Notification
 
 router.beforeEach(async (to, from, next) => {
 	if(to.matched.some(({meta}) => meta.auth)) {
