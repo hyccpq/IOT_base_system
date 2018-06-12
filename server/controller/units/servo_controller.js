@@ -3,10 +3,10 @@ const facialRecognition = require('../../lib/face')
 const { resolve } = require('path')
 const fs = require('fs-extra')
 
-fs.removeSync(resolve(__dirname, '../../public/static/img'))
-fs.mkdir(resolve(__dirname, '../../public/static/img'))
+fs.removeSync(resolve(__dirname, '../../../public/static/img'))
+fs.mkdir(resolve(__dirname, '../../../public/static/img'))
 
-let servos = {}
+
 // let socket = {}
 
 // const servosTurn = dir => {
@@ -32,19 +32,27 @@ let servos = {}
 
 
 module.exports = async (self, Five) => {
-	let X = 90, Y = 30
-	let x = new Five.Servo({
-		pin: 4,
-		startAt: X
-	})
-	let y = new Five.Servo({
-		pin: 7,
-		startAt: Y
-	})
-	servos = {
-		x,
-		y
+	let X = 90, Y = 45
+	let servos = new Five.Servos([
+		{
+		pin: 9,
+		startAt: X,
+		range: [30, 160]
+	},
+		{
+		pin: 10,
+		startAt: Y,
+		range: [0, 80]
 	}
+	])
+	
+	// servos.sweep()
+	// servos[1].sweep()
+	
+	// let yyy = new Five.Servo({
+	// 	pin: 8,
+	// 	startAt: Y,
+	// })
 	
 	
 	let socket =  new SocketServer(2337, false, receiveBinary, false)
@@ -63,7 +71,7 @@ module.exports = async (self, Five) => {
 		let time = +(new Date())
 		let ArrBuffer = stream.split('data:image/jpeg;base64,')
 		let dataBuffer = new Buffer(ArrBuffer[1], 'base64')
-		let filename = resolve(__dirname, `../../public/static/img/${time}.jpg`)
+		let filename = resolve(__dirname, `../../../public/static/img/${time}.jpg`)
 
 		fs.writeFileSync(filename, dataBuffer)
 
@@ -78,9 +86,9 @@ module.exports = async (self, Five) => {
 			X = X - dx
 			Y = Y + dy
 			
-				console.log(dx, dy);
-			servos.x.to(X)
-			servos.y.to(Y)
+			// 	console.log(dx, dy)
+			servos[0].to(X,100)
+			servos[1].to(Y,100)
 		}
 
 	}

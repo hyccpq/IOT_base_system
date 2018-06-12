@@ -8,7 +8,9 @@ const facialRecognition = (filename, socket, cb) => {
 		if (img.height() < 1 || img.width() < 1) throw new Error('图像尺寸为零！！！')
 		
 		img.detectObject(cv.FACE_CASCADE, {}, function (err, faces) {
-			if (err) throw err
+			if (err) {
+				throw err
+			}
 			
 			
 			if (faces && faces.length > 0) {
@@ -46,8 +48,8 @@ const facialRecognition = (filename, socket, cb) => {
 	
 }
 
-let timer = setInterval(() => {
+setInterval(() => {
 	func(frameObj)
-}, 500)
+}, 700)
 
 module.exports = facialRecognition

@@ -8,7 +8,7 @@ module.exports = async (self, Five) => {
 		
 		let temp = new Five.Thermometer({
 			controller: "DS18B20",
-			pin: 2,
+			pin: 3,
 			freq: 2 * 100
 		})
 		let socket = new SocketServer(2333, T, false, false)

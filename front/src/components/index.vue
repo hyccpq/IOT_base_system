@@ -39,6 +39,7 @@
         line-height: 60px;
         text-align: center;
         border-top: #e9e9e9 solid 1px;
+        background-color: #fff;
     }
     .my-main {
         height: inherit;

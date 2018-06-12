@@ -1,5 +1,9 @@
 <template>
     <div>
+        <div class="led-bgc" :style="{backgroundColor : `rgb(${bgc}, ${bgc}, ${bgc})`}"></div>
+        <div class="led-img">
+            <img src="../../public/led.png" alt="" :style="{ filter: `brightness(${value+30}%)` }">
+        </div>
         <div class="block">
             <el-slider
                 :max="255"
@@ -45,6 +49,11 @@
 				this.sendState()
             }
         },
+        computed:{
+		    bgc(){
+		    	return (this.value) * 155 / 255 + 100
+            }
+        },
         mounted(){
 			this.ws = new WebSocket('ws://localhost:2334')
                 // console.log("新建一个")
@@ -66,6 +75,8 @@
 			changeState() {
 				if(this.ledState){
 					this.value = 100
+                } else {
+					this.value = 0
                 }
                 this.sendState()
             },
@@ -83,5 +94,16 @@
 </script>
 
 <style scoped>
-
+.led-img {
+    margin: 50px auto;
+    width: 222px;
+}
+.led-bgc{
+    position: fixed;
+    top: 0;
+    right: 0;
+    bottom: 0;
+    left: 0;
+    z-index: -2;
+}
 </style>

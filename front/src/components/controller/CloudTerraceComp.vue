@@ -1,8 +1,11 @@
 <template>
-    <div>
-        <h2>人脸识别</h2>
+    <div class="all">
+        <h2 class="title">人脸识别区域</h2>
         <div class="left">
-            <video width="800" height="600" id="video" ref="video"></video>
+            <div class="video-position">
+                <video width="800" height="600" id="video" ref="video"></video>
+            </div>
+
             <canvas id="myCanvas"
                     width="800"
                     height="600"
@@ -86,11 +89,23 @@
 	}
 </script>
 
-<style scoped>
+<style scoped lang="less">
+.all {
+    .title {
+        text-align: center;
+        padding: 2rem 0;
+        font-size: 2rem;
+    }
+    .video-position {
+        width: 800px;
+        margin: 10px auto;
+    }
+}
 
 .left {
     height: 100%;
     overflow: auto;
+    margin: 0 auto;
     position: relative;
 }
 

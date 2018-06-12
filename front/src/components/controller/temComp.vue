@@ -1,6 +1,6 @@
 <template>
-    <div>
-        <div>当前温度为 {{ this.value }}</div>
+    <div class="tem-all">
+        <div class="doing-tem">当前温度为 <span class="tem-num">{{ this.value }} </span>℃</div>
         <el-table
             :data="tableData"
             border
@@ -45,22 +45,6 @@
                 chartData: [],
                 chartSettings: {}
 
-				// canvasId: 'myCanvas',
-				// type: 'line',
-				// width: 500,
-				// height: 400,
-				// newData: [],
-				// options: {
-				// 	padding: 50,                   // canvas 内边距
-				// 	bgColor: '#FFFFFF',            // 默认背景颜色
-				// 	title: '温度记录折线图',           // 图表标题
-				// 	titleColor: '#000000',         // 图表标题颜色
-				// 	titlePosition: 'bottom',      // 图表标题位置: top / bottom
-				// 	yEqual: 2,                     // y轴分成10等分
-				// 	fillColor: '#1E9FFF',          // 默认填充颜色
-				// 	contentColor: '#eeeeee',       // 内容横线颜色
-				// 	axisColor: '#666666',          // 坐标轴颜色
-				// }
 			}
 		},
         methods:{
@@ -114,16 +98,29 @@
 		    console.log("断开socket")
 		    this.ws.close()
             this.ws = {}
+
         },
 	}
 </script>
 
 <style scoped>
+    .tem-all {
+        position: relative;
+    }
     .el-table {
         width: 400px;
     }
     .el-chart {
         width: 400px;
         height: 300px;
+    }
+    .doing-tem {
+        position: absolute;
+        right: 20px;
+        top: 30px;
+        font-size: 1.8rem;
+    }
+    .tem-num {
+        font-size: 5rem;
     }
 </style>

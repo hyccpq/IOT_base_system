@@ -5,19 +5,14 @@
             <el-menu-item index="1" class="right-menu">关于本站</el-menu-item>
             <el-submenu index="2" class="right-menu">
                 <template slot="title">详细分类</template>
-                <el-menu-item index="2-1">选项1</el-menu-item>
-                <el-menu-item index="2-2">选项2</el-menu-item>
-                <el-menu-item index="2-3">选项3</el-menu-item>
-                <el-submenu index="2-4">
-                    <template slot="title">选项4</template>
-                    <el-menu-item index="2-4-1">选项1</el-menu-item>
-                    <el-menu-item index="2-4-2">选项2</el-menu-item>
-                    <el-menu-item index="2-4-3">选项3</el-menu-item>
-                </el-submenu>
+                <el-menu-item index="2-1">LED模块</el-menu-item>
+                <el-menu-item index="2-2">温度模块</el-menu-item>
+                <el-menu-item index="2-3">摄像头云台</el-menu-item>
+
             </el-submenu>
-            <el-menu-item index="3" disabled class="right-menu">消息中心</el-menu-item>
+            <el-menu-item index="3" class="right-menu">登出</el-menu-item>
             <el-menu-item index="4" class="right-menu">
-                关于
+                欢迎您，{{ name }}
             </el-menu-item>
         </el-menu>
     </nav>
@@ -41,19 +36,49 @@
 		data() {
 			return {
 				activeIndex: '5',
-				isShowLogin: false
+				isShowLogin: false,
+                name: localStorage.getItem('user')
 			};
 		},
 		methods: {
 			handleSelect(key, keyPath) {
-				console.log(key);
-				if(key == 4){
-					console.log(key);
-					this.loginChange();
-				}
+				console.log(key)
+				switch (key){
+                    case '1':
+                    	this.$notify.success({
+                            title: '还没有呢！'
+                        })
+                        break
+                    case '3':
+                    	this.openUnLogin()
+
+                    	break
+                    case '4':
+                    	this.$notify.success({
+                            title: '你好啊！'
+                        })
+                        break
+                }
+
 			},
-			loginChange(){
-				this.isShowLogin = !this.isShowLogin
+			openUnLogin() {
+				this.$confirm('此操作将退出系统, 是否继续?', '提示', {
+					confirmButtonText: '确 定',
+					cancelButtonText: '取 消',
+					type: 'warning'
+				}).then(() => {
+					localStorage.removeItem('token')
+                    this.$notify({
+						type: 'success',
+						message: '登出成功!'
+					})
+					this.$router.replace('/login')
+				}).catch(() => {
+					this.$notify({
+						type: 'info',
+						message: '已取消'
+					})
+				})
 			}
 		}
 	}
