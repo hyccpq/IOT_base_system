@@ -50,6 +50,6 @@ const facialRecognition = (filename, socket, cb) => {
 
 setInterval(() => {
 	func(frameObj)
-}, 700)
+}, 500)
 
 module.exports = facialRecognition

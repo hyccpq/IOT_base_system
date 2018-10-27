@@ -41,7 +41,9 @@ const userSchema = new Schema({
 	}
 })
 
-userSchema.virtual('isLocked').get(() => this.lockUntil && this.lockUntil > Date.now())
+userSchema.virtual('isLocked').get(function () { 
+	return this.lockUntil && this.lockUntil > Date.now()
+})
 
 userSchema.pre('save', function(next) {
 	if(this.isNew){
@@ -103,8 +105,8 @@ userSchema.methods = {
 					}
 				}
 				
-				this.updates(updates, err => {
-					if(!err) resolve(true)
+				this.update(updates, err => {
+					if(!err) resolve(false)
 					else reject(err)
 				})
 			}

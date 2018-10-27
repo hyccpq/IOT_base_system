@@ -1,6 +1,5 @@
 import mongoose from 'mongoose'
 import glob from 'glob'
-import { resolve } from 'path'
 
 const db = 'mongodb://localhost/my_ioT'
 
