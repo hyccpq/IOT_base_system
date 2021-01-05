@@ -15,7 +15,7 @@
     "author": "hyccpq",
     "license": "Apache-2.0",
     "dependencies": {
-        "axios": "^0.18.0",
+        "axios": "^0.21.1",
         "bcrypt": "^2.0.1",
         "c3": "^0.4.23",
         "colors": "^1.2.5",
